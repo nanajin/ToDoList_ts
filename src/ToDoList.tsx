@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function ToDoList() {
   const [todo, setTodo] = useState("");
   const data = localStorage.getItem("todo");
-  let todolist:string[] = data? [...JSON.parse(data!)]: []; 
+  const list:string[] = data? [...JSON.parse(data!)]: []; 
+  const [todolist, setTodoList] = useState<string[]>(list);
+
+  useEffect(()=>{
+    localStorage.setItem("todo", JSON.stringify(todolist));
+  },[todolist]);
+
   const onChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
     const {value} = event.target;
     setTodo(value);
   }
   const onSubmit = (event:React.FormEvent<HTMLFormElement>)=>{
     event.preventDefault();
-    todolist.push(todo);
-    localStorage.setItem("todo", JSON.stringify(todolist));
+    setTodoList((prev)=>[...prev, todo]);
     setTodo("");
+  }
+  const onRemove = (event:React.MouseEvent<HTMLButtonElement>)=>{
+    const e = event.target as HTMLDivElement;
+    const li = e.parentNode?.childNodes[0];
+    const removeContent = li?.textContent;
+    const newTodo = todolist.filter((item)=>{ return item !== removeContent});
+    setTodoList(newTodo);
   }
   return (
     <div>
@@ -22,12 +34,13 @@ function ToDoList() {
           placeholder="What's Your TODO?" 
           onChange={onChange}
           value={todo}/>
-        <input type="submit" placeholder="Submit"/>
+        <input type="submit" value="Submit"/>
       </form>
       {todolist.map((item:string, index:number)=>{
         return(
           <ul key={index}>
             <li>{item}</li>
+            <button onClick={onRemove}>X</button>
           </ul>
         )
       })}
