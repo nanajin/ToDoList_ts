@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import "./ToDoList.scss";
+import {BiTrash, BiEditAlt, BiCheckSquare} from "react-icons/bi";
 
 function ToDoList() {
   const [todo, setTodo] = useState("");
@@ -40,22 +42,27 @@ function ToDoList() {
     handleRemove(id);
   }
   return (
-    <div> 
-      <form onSubmit={onSubmit}>
+    <div className='container'> 
+      <form onSubmit={onSubmit} className="todo-form">
         <input 
           type="text" 
           placeholder="What's Your TODO?" 
           onChange={onChange}
-          value={todo}/>
+          value={todo}
+        />
         <input type="submit" value={edit? "Edit": "Submit"}/>
       </form>
       {!edit &&<>
         {todolist.map((item:Store, index:number)=>{
           return(
-            <ul key={index}>
+            <ul key={index} className="todo-list">
+              <input type="checkbox"></input>
+              {/* <button><BiCheckSquare/></button> */}
               <li>{item.text}</li>
-              <button onClick={()=>handleRemove(item.id)}>X</button>
-              <button onClick={()=>handleEdit(item.id, item.text)}>Edit</button>
+              <div className='todo-btn'>
+                <button onClick={()=>handleRemove(item.id)}><BiTrash/></button>
+                <button onClick={()=>handleEdit(item.id, item.text)}><BiEditAlt/></button>
+              </div>
             </ul>
           )
         })}
