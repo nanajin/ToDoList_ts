@@ -3,9 +3,13 @@ import React, { useEffect, useState } from 'react';
 function ToDoList() {
   const [todo, setTodo] = useState("");
   const data = localStorage.getItem("todo");
-  const list:string[] = data? [...JSON.parse(data!)]: []; 
-  const [todolist, setTodoList] = useState<string[]>(list);
-
+  const list = data? [...JSON.parse(data!)]: []; 
+  const [todolist, setTodoList] = useState(list);
+  const [edit, setEdit] = useState(false);
+  interface Store{
+    id: number,
+    text: string,
+  }
   useEffect(()=>{
     localStorage.setItem("todo", JSON.stringify(todolist));
   },[todolist]);
@@ -16,34 +20,47 @@ function ToDoList() {
   }
   const onSubmit = (event:React.FormEvent<HTMLFormElement>)=>{
     event.preventDefault();
-    setTodoList((prev)=>[...prev, todo]);
+    const id = Math.floor(Math.random()*1000)+1;
+    const todos:Store = {id: id, text: todo};
+    setTodoList((prev)=>[...prev, todos]);
     setTodo("");
+    if(edit){
+      setEdit(false);
+    }
   }
-  const onRemove = (event:React.MouseEvent<HTMLButtonElement>)=>{
-    const e = event.target as HTMLDivElement;
-    const li = e.parentNode?.childNodes[0];
-    const removeContent = li?.textContent;
-    const newTodo = todolist.filter((item)=>{ return item !== removeContent});
+
+  const handleRemove = (id:number)=>{
+    const newTodo = todolist.filter((item:Store)=>{ 
+      return item.id !== id});
     setTodoList(newTodo);
   }
+  const handleEdit = (id:number, text:string)=>{
+    setTodo(text);
+    setEdit(true);
+    handleRemove(id);
+  }
   return (
-    <div>
+    <div> 
       <form onSubmit={onSubmit}>
         <input 
           type="text" 
           placeholder="What's Your TODO?" 
           onChange={onChange}
           value={todo}/>
-        <input type="submit" value="Submit"/>
+        <input type="submit" value={edit? "Edit": "Submit"}/>
       </form>
-      {todolist.map((item:string, index:number)=>{
-        return(
-          <ul key={index}>
-            <li>{item}</li>
-            <button onClick={onRemove}>X</button>
-          </ul>
-        )
-      })}
+      {!edit &&<>
+        {todolist.map((item:Store, index:number)=>{
+          return(
+            <ul key={index}>
+              <li>{item.text}</li>
+              <button onClick={()=>handleRemove(item.id)}>X</button>
+              <button onClick={()=>handleEdit(item.id, item.text)}>Edit</button>
+            </ul>
+          )
+        })}
+      </>}
+    
     </div>
   );
 }
