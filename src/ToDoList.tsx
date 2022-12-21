@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "./ToDoList.scss";
-import {BiTrash, BiEditAlt, BiCheckSquare} from "react-icons/bi";
+import {BiTrash, BiEditAlt} from "react-icons/bi";
 
 function ToDoList() {
   const [todo, setTodo] = useState("");
