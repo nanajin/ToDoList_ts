@@ -1,22 +1,76 @@
-$border: 2px solid red;
+$border: 2px solid rgb(223, 160, 223);
+$w: 20px;
+$h: 20px;
+$tablet : 1024px;
+$mobile: 400px;
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
 .container{
-  border: $border;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid blueviolet;
+  border-radius: 1em;
   width: 500px;
-  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @include mobile{
+    width: 80%;
+    // margin-top: 30%;
+    // margin-bottom: 30px;
+  }
 }
 .todo-form{
- border: $border;
  text-align: center;
  input:first-child{
-  width: 300px;
+  width: 70%;
+  margin: 20px;
+  margin-top: 35px;
+  border: none;
+  border-bottom: 3px solid blueviolet;
+  @include mobile{
+    width: 80%;
+    margin-bottom: 10px;
+  }
  };
+ input:nth-child(2){
+  background-color: blueviolet;
+  color: white;
+  border: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+  padding: 5px;
+ }
 }
 .todo-list{
-  border: $border;
+  border-bottom: $border;
   display: grid;
-  grid-template-columns: 20px 4fr 1fr;
+  grid-template-columns: 30px 3fr 1fr;
+  width: 80%;
+  margin: auto;
+  margin-top: 15px;
+  .lb{
+    .icb{
+      display: none;
+    }
+    .icb:checked{
+      text-decoration: line-through;
+    }
+    .check, .non-check{
+      font-size: 20px;
+      color: blueviolet;
+      cursor: pointer;
+    }
+  }
   li{
     list-style: none;
+  }
+  .done{
+    text-decoration: line-through;
   }
   .todo-btn{
     button{
@@ -28,7 +82,14 @@ $border: 2px solid red;
       &:first-child{
         margin-right: 15px;
       }
+      &:first-child:hover{
+        color: red;
+        transition: all 0.3s ease;
+      }
+      &:nth-child(2):hover{
+        color: rgb(193, 27, 193);
+        transition: all 0.3s ease;
+      }
     }
-    
   }
 }

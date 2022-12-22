@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./ToDoList.scss";
 import {BiTrash, BiEditAlt} from "react-icons/bi";
+import {BsFillBookmarkCheckFill, BsBookmarkCheck} from "react-icons/bs";
 
 function ToDoList() {
   const [todo, setTodo] = useState("");
@@ -8,9 +9,12 @@ function ToDoList() {
   const list = data? [...JSON.parse(data!)]: []; 
   const [todolist, setTodoList] = useState(list);
   const [edit, setEdit] = useState(false);
+  // const [check, setCheck] = useState(false);
+  let check = false;
   interface Store{
     id: number,
     text: string,
+    done: boolean,
   }
   useEffect(()=>{
     localStorage.setItem("todo", JSON.stringify(todolist));
@@ -23,7 +27,7 @@ function ToDoList() {
   const onSubmit = (event:React.FormEvent<HTMLFormElement>)=>{
     event.preventDefault();
     const id = Math.floor(Math.random()*1000)+1;
-    const todos:Store = {id: id, text: todo};
+    const todos:Store = {id: id, text: todo, done: false};
     setTodoList((prev)=>[...prev, todos]);
     setTodo("");
     if(edit){
@@ -41,6 +45,27 @@ function ToDoList() {
     setEdit(true);
     handleRemove(id);
   }
+
+  const handleCheck = (item:Store)=>{
+    if(item.done === true){
+      check = false;
+    }
+    else if(item.done === false){
+      check = true;
+    }
+    console.log(check);
+    handleRemove(item.id);
+    const todos:Store = {id: item.id, text: item.text, done: check};
+    if(check){
+      setTodoList((prev)=>[...prev, todos]);
+    }
+    else{
+      setTodoList((prev)=>[todos, ...prev]);
+    }
+    // setTodoList((prev)=>[...prev, todos]);
+    // console.log(item.id, item.done);
+  }  
+
   return (
     <div className='container'> 
       <form onSubmit={onSubmit} className="todo-form">
@@ -56,9 +81,13 @@ function ToDoList() {
         {todolist.map((item:Store, index:number)=>{
           return(
             <ul key={index} className="todo-list">
-              <input type="checkbox"></input>
-              {/* <button><BiCheckSquare/></button> */}
-              <li>{item.text}</li>
+              <label className='lb'>
+                <input type="checkbox" className='icb' onClick={()=>handleCheck(item)}/>
+                {item.done? <div className='check'><BsFillBookmarkCheckFill/></div>:
+                  <div className='non-check'><BsBookmarkCheck/></div>
+                }
+              </label>
+              <li className={item.done? "done":""}>{item.text}</li>
               <div className='todo-btn'>
                 <button onClick={()=>handleRemove(item.id)}><BiTrash/></button>
                 <button onClick={()=>handleEdit(item.id, item.text)}><BiEditAlt/></button>
