@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { usePerson, useStore, useStoreTest } from './store/store';
+import { usePerson, useStore, useStoreTest } from './store/testStore';
 const Test = () => {
   const {name, age, greeting} = usePerson();
   const {bears, increasePopulation, decreasePopulation, removeAllBears} = useStore();

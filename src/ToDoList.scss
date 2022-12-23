@@ -2,22 +2,38 @@ $border: 2px solid rgb(223, 160, 223);
 $w: 20px;
 $h: 20px;
 $tablet : 1024px;
-$mobile: 400px;
+$mobile: 500px;
+@mixin center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 @mixin mobile {
   @media (max-width: $mobile) {
     @content;
   }
 }
+@mixin btn { 
+  border: none;
+  background: none;
+  border: $border;
+  border-radius: 1em;
+  padding: 10px;
+  cursor: pointer;
+}
+// ToDoList.tsx
 .container{
-  position: absolute;
+  // position: absolute;
   display: flex;
   flex-direction: column;
   border: 2px solid blueviolet;
   border-radius: 1em;
   width: 500px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+  @include center;
   @include mobile{
     width: 80%;
     // margin-top: 30%;
@@ -92,4 +108,70 @@ $mobile: 400px;
       }
     }
   }
+}
+// Home.tsx
+.home-container{
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 30%;
+  border: $border;
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+  border-bottom: none;
+  text-align: center;
+  @include center;
+}
+.login-link{
+  text-decoration: none;
+  font-size: 20px;
+  border-bottom: $border;
+  width: 30%;
+  margin: auto;
+  color: blueviolet;
+  font-weight: bold;
+}
+.login-link:hover{
+  color: orange;
+  transition: all 0.3s ease;
+}
+// LoginForm.tsx
+.login-form{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border: $border;
+  border-radius: 1em;
+  width: 400px;
+  @include center;
+  .input-container{
+    width: 80%;
+    margin: auto;
+  }
+  input{
+    border: none;
+    border-bottom: 3px solid blueviolet;
+    margin: 10px;
+  }
+  .submit{
+    @include btn();
+    width: fit-content;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    padding: 10px;
+  }
+  input:focus{
+    outline: none;
+  }
+  .pwd-check{
+    font-size: 15px;
+    color: gray;
+    // text-align: center;
+  }
+}
+.toggle-login{
+  @include btn();
+  @include center();
+  top: 10%;
 }

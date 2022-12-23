@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import "./ToDoList.scss";
 import {BiTrash, BiEditAlt} from "react-icons/bi";
 import {BsFillBookmarkCheckFill, BsBookmarkCheck} from "react-icons/bs";
+import { usePersonStore } from './store/store';
 
 function ToDoList() {
+  const {id} = usePersonStore();
   const [todo, setTodo] = useState("");
-  const data = localStorage.getItem("todo");
+  const data = localStorage.getItem(`todo-${id}`);
   const list = data? [...JSON.parse(data!)]: []; 
   const [todolist, setTodoList] = useState(list);
   const [edit, setEdit] = useState(false);
@@ -17,7 +19,7 @@ function ToDoList() {
     done: boolean,
   }
   useEffect(()=>{
-    localStorage.setItem("todo", JSON.stringify(todolist));
+    localStorage.setItem(`todo-${id}`, JSON.stringify(todolist));
   },[todolist]);
 
   const onChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
